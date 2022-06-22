@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,6 +7,25 @@ namespace TCD0402ThreadAndTask
 {
   internal class Program
   {
+    static async Task<string> GetWeb(string url)
+    {
+      try
+      {
+        var httpClient = new HttpClient();
+        Console.WriteLine("START LOADING THE WEB");
+        var result = await httpClient.GetAsync(url);
+        Console.WriteLine("START READING THE WEB");
+        var content = await result.Content.ReadAsStringAsync();
+        return content;
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e.Message);
+        return "";
+      }
+
+    }
+
     static async Task Task2()
     {
       Task task2 = new Task(() =>
@@ -62,19 +82,12 @@ namespace TCD0402ThreadAndTask
     {
 
       var task2 = Task2();
-      var task3 = Task3();
-      var task4 = Task4();
-      var task5 = Task5();
-
-      DoSomething(3, "Task 1", ConsoleColor.Red);
+      var getWeb = GetWeb("https://google.com");
 
       await task2;
-      await task3;
-      var resultTask4 = await task4;
-      var resultTask5 = await task5;
+      var result = await getWeb;
+      Console.WriteLine(result);
 
-      Console.WriteLine(resultTask4);
-      Console.WriteLine(resultTask5);
       Console.WriteLine("Press Any Key To Exit ...");
     }
 
