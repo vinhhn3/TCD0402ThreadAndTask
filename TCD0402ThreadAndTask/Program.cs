@@ -21,6 +21,12 @@ namespace TCD0402ThreadAndTask
       task2.Start();
       task3.Start();
       DoSomething(10, "Task 1", ConsoleColor.Red);
+
+      task2.Wait();
+      task3.Wait();
+
+      Console.WriteLine("Press Any Key To Exit ...");
+      Console.ReadLine();
     }
 
     public static void DoSomething(int seconds, string message, ConsoleColor color)
