@@ -31,26 +31,41 @@ namespace TCD0402ThreadAndTask
       Console.WriteLine("Task 3 completed ...");
     }
 
-    static async Task Main(string[] args)
+    static async Task<string> Task4()
     {
-
-      var task2 = Task2();
-      var task3 = Task3();
-      // Task<T>
       Task<string> task4 = new Task<string>(() =>
       {
         DoSomething(6, "Task 4", ConsoleColor.Magenta);
         return "Task 4 completed ...";
+
       });
 
+      task4.Start();
+      var result = await task4;
+      return result;
+    }
+
+    static async Task<string> Task5()
+    {
       Task<string> task5 = new Task<string>((object obj) =>
       {
         DoSomething(8, (string)obj, ConsoleColor.Yellow);
         return "Task 5 completed ...";
       }, "Task 5");
 
-      task4.Start();
       task5.Start();
+      var result = await task5;
+      return result;
+    }
+
+    static async Task Main(string[] args)
+    {
+
+      var task2 = Task2();
+      var task3 = Task3();
+      var task4 = Task4();
+      var task5 = Task5();
+
       DoSomething(3, "Task 1", ConsoleColor.Red);
 
       await task2;
