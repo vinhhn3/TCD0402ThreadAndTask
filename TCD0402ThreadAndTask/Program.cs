@@ -7,45 +7,30 @@ namespace TCD0402ThreadAndTask
   {
     static void Main(string[] args)
     {
-      Thread mainThread = Thread.CurrentThread;
-      Console.WriteLine(mainThread.Name);
+      DoSomething(10, "Task 1", ConsoleColor.Red);
+      DoSomething(5, "Task 2", ConsoleColor.Blue);
+      DoSomething(7, "Task 3", ConsoleColor.Green);
 
-      Thread thread1 = new Thread(() =>
-      {
-        CountDown("Timer 1...");
-      });
-      Thread thread2 = new Thread(() =>
-      {
-        CountUp("Timer 2...");
-      });
 
-      thread1.Start();
-      thread2.Start();
-      mainThread.Name = "Main Thread ...";
 
 
     }
 
-    public static void CountDown(string message)
+    public static void DoSomething(int seconds, string message, ConsoleColor color)
     {
-      for (int i = 10; i >= 0; i--)
+      Console.ForegroundColor = color;
+      Console.WriteLine($"{message} starts ...");
+      Console.ResetColor();
+      for (int i = 0; i <= seconds; i++)
       {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"{message}: {i} seconds");
-        Thread.Sleep(1000);
+        Console.ForegroundColor = color;
+        Console.WriteLine($"{message,10} {i,2}");
         Console.ResetColor();
-      }
-    }
-
-    public static void CountUp(string message)
-    {
-      for (int i = 0; i <= 10; i++)
-      {
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"{message}: {i} seconds");
         Thread.Sleep(1000);
-        Console.ResetColor();
       }
+      Console.ForegroundColor = color;
+      Console.WriteLine($"{message} ends ...");
+      Console.ResetColor();
     }
   }
 }
