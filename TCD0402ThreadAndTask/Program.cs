@@ -6,27 +6,40 @@ namespace TCD0402ThreadAndTask
 {
   internal class Program
   {
-    static void Main(string[] args)
+    static async Task Task2()
     {
       Task task2 = new Task(() =>
       {
         DoSomething(5, "Task 2", ConsoleColor.Blue);
       });
 
+      task2.Start();
+
+      await task2; // return
+      Console.WriteLine("Task 2 completed ...");
+    }
+
+    static async Task Task3()
+    {
       Task task3 = new Task((object obj) =>
       {
         DoSomething(7, (string)obj, ConsoleColor.Green);
       }, "Task 3");
 
-      task2.Start();
       task3.Start();
-      DoSomething(10, "Task 1", ConsoleColor.Red);
+      await task3;
+      Console.WriteLine("Task 3 completed ...");
+    }
 
-      task2.Wait();
-      task3.Wait();
+    static async Task Main(string[] args)
+    {
 
+      var task2 = Task2();
+      var task3 = Task3();
+      DoSomething(3, "Task 1", ConsoleColor.Red);
+      await task2;
+      await task3;
       Console.WriteLine("Press Any Key To Exit ...");
-      Console.ReadLine();
     }
 
     public static void DoSomething(int seconds, string message, ConsoleColor color)
@@ -36,13 +49,19 @@ namespace TCD0402ThreadAndTask
         Console.ForegroundColor = color;
         Console.WriteLine($"{message} starts ...");
         Console.ResetColor();
-        for (int i = 0; i <= seconds; i++)
+      }
+      for (int i = 0; i <= seconds; i++)
+      {
+        lock (Console.Out)
         {
           Console.ForegroundColor = color;
           Console.WriteLine($"{message,10} {i,2}");
           Console.ResetColor();
-          Thread.Sleep(1000);
         }
+        Thread.Sleep(1000);
+      }
+      lock (Console.Out)
+      {
         Console.ForegroundColor = color;
         Console.WriteLine($"{message} ends ...");
         Console.ResetColor();
